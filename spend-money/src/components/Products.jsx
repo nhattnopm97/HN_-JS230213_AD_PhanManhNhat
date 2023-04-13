@@ -212,6 +212,10 @@ function Products() {
   const handleInterest = (event, id) => {
     let newProducts = [...products];
     let newCart = [...cart];
+    if (newProducts[id].quantity == 0) {
+      setProducts(newProducts);
+      return false;
+    }
     if (cart !== "") {
       let flag = true;
       for (var i = 0; i < newCart.length; i++) {
@@ -235,22 +239,23 @@ function Products() {
         setCart(newCart);
       }
     }
-    if (newProducts[id].quantity == 0) {
-      setProducts(newProducts);
-      return false;
-    } else {
-      newProducts[id].quantity = event - 1;
-      let changeMoney =
-        money + newProducts[id].quantity * newProducts[id].price;
-      setMoney(changeMoney);
-      setProducts(newProducts);
-    }
+
+    newProducts[id].quantity = event - 1;
+    let changeMoney = money + newProducts[id].quantity * newProducts[id].price;
+    setMoney(changeMoney);
+    setProducts(newProducts);
   };
 
-  const handleResetCart=()=>{
+  const handleResetCart = () => {
     setTotal(0);
     setCart("");
-  }
+    setMoney(128000000000);
+    let newProducts = [...products];
+    for (let i = 0; i < newProducts.length; i++) {
+      newProducts[i].quantity = 0;
+    }
+    setProducts(newProducts);
+  };
 
   return (
     <div>
@@ -290,7 +295,8 @@ function Products() {
           {cart !== "" ? (
             cart.map((a, b) => (
               <div className="elementCart" key={b}>
-                {a.title}- ${a.price.toLocaleString()}: {a.quantity} cái: ${(a.quantity * a.price).toLocaleString()}
+                {a.title}- ${a.price.toLocaleString()}: {a.quantity} cái: $
+                {(a.quantity * a.price).toLocaleString()}
               </div>
             ))
           ) : (
