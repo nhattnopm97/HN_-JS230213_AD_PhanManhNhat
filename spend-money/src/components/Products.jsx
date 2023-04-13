@@ -167,37 +167,37 @@ function Products() {
     },
   ]);
   const [money, setMoney] = useState(128000000000);
-  const [cart,setCart] = useState([])
-
-  //   let count =0;
-  //   {
-  //     id: 1,
-  //     title: "Cola",
-  //     price: 6,
-  //     image:
-  //       "https://ayb.akinoncdn.com/products/2019/01/18/3544/5aa1ee14-1c83-4213-a62b-773c4785e187_size780x780_quality60_cropCenter.jpg",
-  //   }
-
-  //   const handleOnchangeQuantity = (quantityInput, id) => {
-  //     setEditingTodo({
-  //         quantityInput: quantityInput,
-  //         id: id,
-  //       })
-  //       setUpdatedTodo(quantityInput);
-  //   };
+  const [cart, setCart] = useState("");
 
   const handleAdd = (event, id) => {
     let newProducts = [...products];
     let changeMoney = money - newProducts[id].quantity * newProducts[id].price;
-    if(changeMoney<0){
-        alert("Không đủ tiền r b êi!")
-        return;
+    if (changeMoney < 0) {
+      alert("Không đủ tiền r b êi!");
+      return;
     }
     console.log(newProducts[id]);
     console.log(cart);
-    let newCart=[...cart];
-    newCart.push(newProducts[id]);
-    setCart(newCart);
+    let newCart = [...cart];
+    if (cart === "") {
+      newCart.push(newProducts[id]);
+      setCart(newCart);
+    } else {
+      let flag = true;
+      for (var i = 0; i < newCart.length; i++) {
+        if (newCart[i] == newProducts[id]) {
+          flag = false;
+          break;
+        }
+      }
+      if (!flag) {
+        newCart.splice(i,1,newProducts[id]);
+        setCart(newCart);
+      } else {
+        newCart.push(newProducts[id]);
+        setCart(newCart);
+      }
+    }
     setMoney(changeMoney);
     newProducts[id].quantity = event + 1;
     setProducts(newProducts);
@@ -210,7 +210,8 @@ function Products() {
       return false;
     } else {
       newProducts[id].quantity = event - 1;
-      let changeMoney = money + newProducts[id].quantity * newProducts[id].price;
+      let changeMoney =
+        money + newProducts[id].quantity * newProducts[id].price;
       setMoney(changeMoney);
       setProducts(newProducts);
     }
@@ -249,14 +250,27 @@ function Products() {
         ))}
         ;
       </div>
-      <div>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-      </div>
+      {cart !== "" ? (
+        cart.map((a, b) => (
+          <>
+            <p>
+              {a.title}-{a.price}-{a.quantity}: {a.quantity * a.price}
+            </p>
+          </>
+        ))
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
 
 export default Products;
+// {
+//     quantity: 0,
+//     id: 1,
+//     title: "Cola",
+//     price: 6,
+//     image:
+//       "https://ayb.akinoncdn.com/products/2019/01/18/3544/5aa1ee14-1c83-4213-a62b-773c4785e187_size780x780_quality60_cropCenter.jpg",
+//   }
