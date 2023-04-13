@@ -191,7 +191,7 @@ function Products() {
         }
       }
       if (!flag) {
-        newCart.splice(i,1,newProducts[id]);
+        newCart.splice(i, 1, newProducts[id]);
         setCart(newCart);
       } else {
         newCart.push(newProducts[id]);
@@ -205,6 +205,27 @@ function Products() {
 
   const handleInterest = (event, id) => {
     let newProducts = [...products];
+    let newCart = [...cart];
+    if (cart !== "") {
+      let flag = true;
+      for (var i = 0; i < newCart.length; i++) {
+        if (newCart[i] == newProducts[id]) {
+          flag = false;
+          break;
+        }
+        if (!flag) {
+          if (newProducts[id].quantity === 0) {
+            console.log(newCart);
+            newCart.splice(i, 1);
+            console.log(newCart);
+            setCart(newCart);
+          } else {
+            newCart.splice(i, 1, newProducts[id]);
+            setCart(newCart);
+          }
+        }
+      }
+    }
     if (newProducts[id].quantity == 0) {
       setProducts(newProducts);
       return false;
@@ -253,14 +274,15 @@ function Products() {
       {cart !== "" ? (
         cart.map((a, b) => (
           <>
-            <p>
-              {a.title}-{a.price}-{a.quantity}: {a.quantity * a.price}
+            <p key={b}>
+              {a.title}- ${a.price}- {a.quantity} cái: ${a.quantity * a.price}
             </p>
           </>
         ))
       ) : (
         <></>
       )}
+      <div>Tổng:</div>
     </div>
   );
 }
