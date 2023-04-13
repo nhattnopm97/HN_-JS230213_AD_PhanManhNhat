@@ -67,6 +67,18 @@ body {
   width: 100%;
   height: 200px;
 }
+.Cart{
+  display: flex;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  position:sticky;
+  bottom: 0;
+}
+
+.elementCart{
+  background-color: #282c34;
+}
 
 .quantity {
   width: 50px;

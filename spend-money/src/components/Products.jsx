@@ -168,6 +168,7 @@ function Products() {
   ]);
   const [money, setMoney] = useState(128000000000);
   const [cart, setCart] = useState("");
+  const [total, setTotal] = useState(0);
 
   const handleAdd = (event, id) => {
     let newProducts = [...products];
@@ -176,12 +177,11 @@ function Products() {
       alert("Không đủ tiền r b êi!");
       return;
     }
-    console.log(newProducts[id]);
-    console.log(cart);
     let newCart = [...cart];
     if (cart === "") {
       newCart.push(newProducts[id]);
       setCart(newCart);
+      setTotal(newCart[0].price * (newCart[0].quantity + 1));
     } else {
       let flag = true;
       for (var i = 0; i < newCart.length; i++) {
@@ -193,9 +193,15 @@ function Products() {
       if (!flag) {
         newCart.splice(i, 1, newProducts[id]);
         setCart(newCart);
+        let newTotal = total;
+        setTotal((newTotal += newCart[i].price * (newCart[i].quantity + 1)));
       } else {
         newCart.push(newProducts[id]);
         setCart(newCart);
+        let newTotal = total;
+        setTotal(
+          (newTotal += newProducts[id].price * (newProducts[id].quantity + 1))
+        );
       }
     }
     setMoney(changeMoney);
@@ -209,21 +215,24 @@ function Products() {
     if (cart !== "") {
       let flag = true;
       for (var i = 0; i < newCart.length; i++) {
-        if (newCart[i] == newProducts[id]) {
+        console.log(newCart[i].id == newProducts[id].id);
+        if (newCart[i].id == newProducts[id].id) {
           flag = false;
           break;
         }
-        if (!flag) {
-          if (newProducts[id].quantity === 0) {
-            console.log(newCart);
-            newCart.splice(i, 1);
-            console.log(newCart);
-            setCart(newCart);
-          } else {
-            newCart.splice(i, 1, newProducts[id]);
-            setCart(newCart);
-          }
+      }
+      if (!flag) {
+        if (event === 1) {
+          console.log(newCart);
+          newCart.splice(i, 1);
+          setCart(newCart);
+        } else {
+          newCart.splice(i, 1, newProducts[id]);
+          setCart(newCart);
         }
+      } else {
+        newCart.splice(i, 1, newProducts[id]);
+        setCart(newCart);
       }
     }
     if (newProducts[id].quantity == 0) {
@@ -238,6 +247,11 @@ function Products() {
     }
   };
 
+  const handleResetCart=()=>{
+    setTotal(0);
+    setCart("");
+  }
+
   return (
     <div>
       <div className="headerProducts">
@@ -248,7 +262,7 @@ function Products() {
           <div className="element" key={id}>
             <img className="imageProduct" src={products.image} alt="" />
             <div className="nameAndPrice">
-              {products.title} ------- {products.price}
+              {products.title} ------- ${products.price.toLocaleString()}
             </div>
             <div className="inputQuantity">
               <button
@@ -271,18 +285,21 @@ function Products() {
         ))}
         ;
       </div>
-      {cart !== "" ? (
-        cart.map((a, b) => (
-          <>
-            <p key={b}>
-              {a.title}- ${a.price}- {a.quantity} cái: ${a.quantity * a.price}
-            </p>
-          </>
-        ))
-      ) : (
-        <></>
-      )}
-      <div>Tổng:</div>
+      <div className="Cart">
+        <div className="containerCart">
+          {cart !== "" ? (
+            cart.map((a, b) => (
+              <div className="elementCart" key={b}>
+                {a.title}- ${a.price.toLocaleString()}: {a.quantity} cái: ${(a.quantity * a.price).toLocaleString()}
+              </div>
+            ))
+          ) : (
+            <></>
+          )}
+        </div>
+        <div className="totalCart">Tổng:${total.toLocaleString()}</div>
+        <button onClick={handleResetCart}>Reset Cart</button>
+      </div>
     </div>
   );
 }
