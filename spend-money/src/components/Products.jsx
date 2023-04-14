@@ -273,11 +273,11 @@ function Products() {
         let changeMoney = money + (qt + 1) * newCart[i].price;
         setMoney(changeMoney);
         newCart[i].quantity = qt - 1;
+        let newTotal = total;
+        setTotal((newTotal -= newCart[i].price));
         if (newCart[i].quantity == 0) {
           newCart.splice(i, 1);
         }
-        let newTotal = total;
-        setTotal((newTotal -= newCart[i].price));
         setCart(newCart);
         break;
       }
