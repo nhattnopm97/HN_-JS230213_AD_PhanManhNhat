@@ -172,7 +172,7 @@ function Products() {
 
   const handleAdd = (event, id) => {
     let newProducts = [...products];
-    let changeMoney = money - (event + 1) * newProducts[id].price;
+    let changeMoney = money - newProducts[id].price;
     setMoney(changeMoney);
     if (changeMoney < 0) {
       alert("Không đủ tiền r b êi!");
@@ -195,13 +195,13 @@ function Products() {
         newCart.splice(i, 1, newProducts[id]);
         setCart(newCart);
         let newTotal = total;
-        setTotal((newTotal += newCart[i].price * (newCart[i].quantity + 1)));
+        setTotal((newTotal += newCart[i].price));
       } else {
         newCart.push(newProducts[id]);
         setCart(newCart);
         let newTotal = total;
         setTotal(
-          (newTotal += newProducts[id].price * (newProducts[id].quantity + 1))
+          (newTotal += newProducts[id].price)
         );
       }
     }
@@ -249,7 +249,7 @@ function Products() {
     }
 
     newProducts[id].quantity = event - 1;
-    let changeMoney = money - newProducts[id].price;
+    let changeMoney = money + newProducts[id].price;
     console.log(newProducts[id].quantity);
     setMoney(changeMoney);
     setProducts(newProducts);
@@ -270,7 +270,7 @@ function Products() {
     let newCart = [...cart];
     for (let i = 0; i < newCart.length; i++) {
       if (i == id) {
-        let changeMoney = money + (qt + 1) * newCart[i].price;
+        let changeMoney = money +newCart[i].price;
         setMoney(changeMoney);
         newCart[i].quantity = qt - 1;
         let newTotal = total;
@@ -288,7 +288,7 @@ function Products() {
     let newCart = [...cart];
     for (let i = 0; i < newCart.length; i++) {
       if (i == id) {
-        let changeMoney = money - (qt + 1) * newCart[i].price;
+        let changeMoney = money -newCart[i].price;
         if(changeMoney<0){
           alert("Không đủ tiền r bạn êi");
           return;
