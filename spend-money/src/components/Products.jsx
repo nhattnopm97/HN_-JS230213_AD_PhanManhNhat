@@ -172,7 +172,7 @@ function Products() {
 
   const handleAdd = (event, id) => {
     let newProducts = [...products];
-    let changeMoney = money - (event+1) * newProducts[id].price;
+    let changeMoney = money - (event + 1) * newProducts[id].price;
     console.log(event);
     setMoney(changeMoney);
     if (changeMoney < 0) {
@@ -213,6 +213,10 @@ function Products() {
   const handleInterest = (event, id) => {
     let newProducts = [...products];
     let newCart = [...cart];
+    if(newCart.length == 1 && newCart[0].quantity==1){
+      handleResetCart();
+      return;
+    }
     if (newProducts[id].quantity == 0) {
       setProducts(newProducts);
       return false;
@@ -234,15 +238,20 @@ function Products() {
         } else {
           newCart.splice(i, 1, newProducts[id]);
           setCart(newCart);
+          let newTotal = total;
+          setTotal((newTotal -= newProducts[id].price));
         }
       } else {
         newCart.splice(i, 1, newProducts[id]);
         setCart(newCart);
+        let newTotal = total;
+        setTotal((newTotal -= newProducts[id].price));
       }
     }
 
     newProducts[id].quantity = event - 1;
-    let changeMoney = money + newProducts[id].quantity * newProducts[id].price;
+    let changeMoney = money - newProducts[id].price;
+    console.log(newProducts[id].quantity);
     setMoney(changeMoney);
     setProducts(newProducts);
   };
@@ -257,6 +266,14 @@ function Products() {
     }
     setProducts(newProducts);
   };
+
+  const minus=(qt,id)=>{
+
+  }
+
+  const plus=(qt,id)=>{
+    
+  }
 
   return (
     <div>
@@ -296,7 +313,7 @@ function Products() {
           {cart !== "" ? (
             cart.map((a, b) => (
               <div className="elementCart" key={b}>
-                {a.title}- ${a.price.toLocaleString()}: {a.quantity} cái: $
+                {a.title}- ${a.price.toLocaleString()}: <button onClick={()=>{minus(a.quantity,b)}}>Minus</button>{a.quantity} cái <button onClick={()=>{plus(a.quantity,b)}}>Plus</button>: $
                 {(a.quantity * a.price).toLocaleString()}
               </div>
             ))
