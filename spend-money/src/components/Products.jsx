@@ -234,6 +234,8 @@ function Products() {
           console.log(newCart);
           newCart.splice(i, 1);
           setCart(newCart);
+          let newTotal = total;
+          setTotal((newTotal -= newProducts[id].price));
         } else {
           newCart.splice(i, 1, newProducts[id]);
           setCart(newCart);
