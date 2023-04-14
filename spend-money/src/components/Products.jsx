@@ -172,7 +172,9 @@ function Products() {
 
   const handleAdd = (event, id) => {
     let newProducts = [...products];
-    let changeMoney = money - newProducts[id].quantity * newProducts[id].price;
+    let changeMoney = money - (event+1) * newProducts[id].price;
+    console.log(event);
+    setMoney(changeMoney);
     if (changeMoney < 0) {
       alert("Không đủ tiền r b êi!");
       return;
@@ -204,7 +206,6 @@ function Products() {
         );
       }
     }
-    setMoney(changeMoney);
     newProducts[id].quantity = event + 1;
     setProducts(newProducts);
   };
