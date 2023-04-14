@@ -173,7 +173,6 @@ function Products() {
   const handleAdd = (event, id) => {
     let newProducts = [...products];
     let changeMoney = money - (event + 1) * newProducts[id].price;
-    console.log(event);
     setMoney(changeMoney);
     if (changeMoney < 0) {
       alert("Không đủ tiền r b êi!");
@@ -213,7 +212,7 @@ function Products() {
   const handleInterest = (event, id) => {
     let newProducts = [...products];
     let newCart = [...cart];
-    if(newCart.length == 1 && newCart[0].quantity==1){
+    if (newCart.length == 1 && newCart[0].quantity == 1) {
       handleResetCart();
       return;
     }
@@ -267,13 +266,42 @@ function Products() {
     setProducts(newProducts);
   };
 
-  const minus=(qt,id)=>{
+  const minus = (qt, id) => {
+    let newCart = [...cart];
+    for (let i = 0; i < newCart.length; i++) {
+      if (i == id) {
+        let changeMoney = money + (qt + 1) * newCart[i].price;
+        setMoney(changeMoney);
+        newCart[i].quantity = qt - 1;
+        if (newCart[i].quantity == 0) {
+          newCart.splice(i, 1);
+        }
+        let newTotal = total;
+        setTotal((newTotal -= newCart[i].price));
+        setCart(newCart);
+        break;
+      }
+    }
+  };
 
-  }
-
-  const plus=(qt,id)=>{
-    
-  }
+  const plus = (qt, id) => {
+    let newCart = [...cart];
+    for (let i = 0; i < newCart.length; i++) {
+      if (i == id) {
+        let changeMoney = money - (qt + 1) * newCart[i].price;
+        if(changeMoney<0){
+          alert("Không đủ tiền r bạn êi");
+          return;
+        }
+        setMoney(changeMoney);
+        newCart[i].quantity = qt + 1;
+        setCart(newCart);
+        let newTotal = total;
+        setTotal((newTotal += newCart[i].price));
+        break;
+      }
+    }
+  };
 
   return (
     <div>
@@ -313,8 +341,23 @@ function Products() {
           {cart !== "" ? (
             cart.map((a, b) => (
               <div className="elementCart" key={b}>
-                {a.title}- ${a.price.toLocaleString()}: <button onClick={()=>{minus(a.quantity,b)}}>Minus</button>{a.quantity} cái <button onClick={()=>{plus(a.quantity,b)}}>Plus</button>: $
-                {(a.quantity * a.price).toLocaleString()}
+                {a.title}- ${a.price.toLocaleString()}:{" "}
+                <button
+                  onClick={() => {
+                    minus(a.quantity, b);
+                  }}
+                >
+                  Minus
+                </button>
+                {a.quantity} cái{" "}
+                <button
+                  onClick={() => {
+                    plus(a.quantity, b);
+                  }}
+                >
+                  Plus
+                </button>
+                : ${(a.quantity * a.price).toLocaleString()}
               </div>
             ))
           ) : (
